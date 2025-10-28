@@ -1,0 +1,107 @@
+// ניצור את תוכן הדף כולו כ־HTML בתוך מחרוזת
+const pageHTML = `
+<style>
+/* כל ה-CSS שלך */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#fffaf5 0%,#fff5ed 100%);color:#333;line-height:1.6;}
+.container{max-width:1200px;margin:0 auto;padding:20px;}
+header{text-align:center;padding:60px 20px;background:linear-gradient(135deg,#8b3a3a 0%,#a84848 100%);color:white;border-radius:20px;margin-bottom:40px;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+h1{font-size:3em;margin-bottom:10px;text-shadow:2px 2px 4px rgba(0,0,0,0.3);}
+.tagline{font-size:1.3em;opacity:0.95;}
+.section{background:white;padding:40px;margin-bottom:30px;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,0.1);}
+h2{color:#8b3a3a;font-size:2.2em;margin-bottom:30px;text-align:center;position:relative;padding-bottom:15px;}
+h2::after{content:'';position:absolute;bottom:0;right:50%;transform:translateX(50%);width:100px;height:3px;background:linear-gradient(90deg,#8b3a3a,#a84848);}
+.workshops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;margin-top:30px;}
+.workshop-card{background:linear-gradient(135deg,#fffcfa 0%,#fff8f3 100%);padding:30px;border-radius:12px;border:2px solid #ffe8e0;transition:transform 0.3s,box-shadow 0.3s;}
+.workshop-card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(139,58,58,0.2);}
+.workshop-card h3{color:#8b3a3a;font-size:1.5em;margin-bottom:15px;}
+.workshop-description{margin:15px 0;color:#555;line-height:1.8;}
+.dates-btn{background:linear-gradient(135deg,#8b3a3a 0%,#a84848 100%);color:white;border:none;padding:12px 30px;font-size:1.05em;border-radius:25px;cursor:pointer;width:100%;margin-top:15px;transition:all 0.3s;font-weight:bold;}
+.dates-btn:hover{transform:scale(1.05);box-shadow:0 5px 15px rgba(139,58,58,0.4);}
+.dates-container{display:none;margin-top:20px;padding:20px;background:#fff;border-radius:10px;border:2px solid #8b3a3a;}
+.dates-container.active{display:block;animation:slideDown 0.3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.date-item{padding:15px;margin:10px 0;background:#fffaf5;border-radius:8px;border-right:4px solid #8b3a3a;}
+.date-item strong{color:#8b3a3a;display:block;margin-bottom:5px;}
+.register-btn{background:linear-gradient(135deg,#6d2e2e 0%,#8b3a3a 100%);color:white;border:none;padding:10px 25px;font-size:1em;border-radius:20px;cursor:pointer;margin-top:10px;transition:all 0.3s;font-weight:bold;}
+.register-btn:hover{transform:scale(1.05);box-shadow:0 3px 10px rgba(109,46,46,0.4);}
+.private-section{background:linear-gradient(135deg,#fffcfa 0%,#fff5ed 100%);padding:50px;text-align:center;}
+.private-section p{font-size:1.2em;margin-bottom:20px;color:#555;}
+.contact-btn{background:linear-gradient(135deg,#6d2e2e 0%,#8b3a3a 100%);color:white;border:none;padding:15px 40px;font-size:1.2em;border-radius:30px;cursor:pointer;transition:all 0.3s;font-weight:bold;display:inline-block;text-decoration:none;margin:10px;}
+.contact-btn:hover{transform:scale(1.05);box-shadow:0 5px 15px rgba(109,46,46,0.4);}
+.whatsapp-btn{background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);}
+.whatsapp-btn:hover{box-shadow:0 5px 15px rgba(37,211,102,0.4);}
+.instagram-btn{background:linear-gradient(135deg,#E1306C 0%,#C13584 100%);}
+.instagram-btn:hover{box-shadow:0 5px 15px rgba(225,48,108,0.4);}
+footer{text-align:center;padding:30px;color:#666;margin-top:40px;}
+.social-links{margin-top:15px;}
+.icon{font-size:2em;margin-bottom:15px;}
+@media(max-width:768px){h1{font-size:2em;}.workshops-grid{grid-template-columns:1fr;}.section{padding:25px;}.contact-btn{display:block;margin:10px 0;}}
+.modal{display:none;position:fixed;z-index:1000;right:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);}
+.modal-content{background-color:white;margin:5% auto;padding:40px;border-radius:15px;width:90%;max-width:500px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,0.3);}
+.close{color:#aaa;position:absolute;left:20px;top:15px;font-size:28px;font-weight:bold;cursor:pointer;}
+.close:hover{color:#000;}
+.payment-info{text-align:center;margin:20px 0;}
+.payment-info p{margin:10px 0;font-size:1.1em;}
+.paybox-btn{background:linear-gradient(135deg,#4CAF50 0%,#45a049 100%);color:white;border:none;padding:15px 40px;font-size:1.2em;border-radius:30px;cursor:pointer;margin-top:20px;transition:all 0.3s;font-weight:bold;}
+.paybox-btn:hover{transform:scale(1.05);box-shadow:0 5px 15px rgba(76,175,80,0.4);}
+</style>
+
+<div class="container">
+<header>
+<div class="icon">🥐</div>
+<h1>המאפים של לימור</h1>
+<p class="tagline">בואו ללמוד, ליצור ולהתאהב באפייה מחדש - כל ביס הוא חוויה!</p>
+</header>
+
+<!-- כאן נכנס כל התוכן שלך בדיוק כמו בקוד המקורי -->
+<!-- כדי לקצר כאן הדוגמה, פשוט הדביקי את ה-HTML הפנימי שלך -->
+
+</div>
+
+<!-- Modal -->
+<div id="registrationModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2 style="color: #8b3a3a;">השלמת הרשמה</h2>
+    <div class="payment-info">
+      <p><strong>סדנה:</strong> <span id="workshopName"></span></p>
+      <p><strong>מחיר:</strong> ₪<span id="workshopPrice"></span></p>
+      <p style="margin-top: 30px;">לסיום ההרשמה, יש להשלים תשלום דרך PayBox</p>
+      <button class="paybox-btn" onclick="processPayment()">מעבר לתשלום מאובטח ב-PayBox</button>
+    </div>
+  </div>
+</div>
+`;
+
+// נכניס את כל ה-HTML לתוך העמוד
+document.body.innerHTML = pageHTML;
+
+// הפונקציות המקוריות שלך
+function toggleDates(type) {
+  const container = document.getElementById(type + '-dates');
+  if (container) container.classList.toggle('active');
+}
+
+function openModal(workshopName, price) {
+  document.getElementById('workshopName').textContent = workshopName;
+  document.getElementById('workshopPrice').textContent = price;
+  document.getElementById('registrationModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('registrationModal').style.display = 'none';
+}
+
+function processPayment() {
+  alert('מעביר אותך לעמוד התשלום המאובטח של PayBox...');
+  // כאן אפשר לשים קישור אמיתי:
+  // window.location.href = 'https://payboxapp.page.link/your-business-link';
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById('registrationModal');
+  if (event.target == modal) {
+    closeModal();
+  }
+};
